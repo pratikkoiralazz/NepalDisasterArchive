@@ -44,14 +44,6 @@ $categories = db()->query('SELECT name FROM categories ORDER BY name')->fetchAll
         .page-link{display:inline-block;margin-top:14px;color:var(--red);font:700 14px Arial,sans-serif;text-decoration:none}
         .page-link:hover{text-decoration:underline}
         .last-updated{padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font:14px Arial,sans-serif}
-        .footer{background:#111820;color:#d8dde0;padding:38px 7%;font-family:Arial,sans-serif}
-        .footer-inner{width:min(1080px,90%);margin:auto}
-        .footer strong{color:#fff;letter-spacing:.5px}
-        .footer p{line-height:1.6}
-        .social-links{display:flex;gap:14px;margin-top:16px}
-        .social-links a{display:inline-flex;width:38px;height:38px;align-items:center;justify-content:center;border:1px solid #59636a;border-radius:50%;color:#fff}
-        .social-links svg{width:19px;height:19px;fill:currentColor;stroke:currentColor;stroke-width:1.5}
-        .social-links svg rect,.social-links svg circle{fill:none}
         @media(max-width:700px){.about-hero{padding:55px 0}.page{padding:38px 0 55px}.stats{grid-template-columns:1fr}.feature-grid,.detail-grid,.ownership{grid-template-columns:1fr}.section-heading{font-size:29px}}
     </style>
 </head>
@@ -142,15 +134,6 @@ $categories = db()->query('SELECT name FROM categories ORDER BY name')->fetchAll
     <p class="last-updated">Archive content changes as stories are reviewed and updated. Last story update: <?= e($lastUpdated ? date('F j, Y', strtotime((string)$lastUpdated)) : 'Not yet available') ?>.</p>
     <a class="page-link" href="<?= BASE_URL ?>/">← Back to the archive</a>
 </main>
-<footer class="footer">
-    <div class="footer-inner">
-        <strong>Nepal Disaster Archive</strong>
-        <p>Disaster history · Human stories · Preparedness<br>Documenting Disasters. Building Resilience — an AcademiX Digital initiative.</p>
-        <div class="social-links" aria-label="Social media links">
-            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.3 0-5 1.8-5 5v3H6v4h3v8h4v-8h3.2l.8-4H13V9c0-.7.3-1 1-1z"/></svg></a>
-            <a href="https://www.instagram.com/academix_digital/" target="_blank" rel="noopener noreferrer" aria-label="AcademiX Digital on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></a>
-        </div>
-    </div>
-</footer>
+<?php require __DIR__.'/includes/public-footer.php'; ?>
 </body>
 </html>

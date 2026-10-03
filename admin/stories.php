@@ -13,4 +13,4 @@ $s=db()->prepare("SELECT s.*,c.name category FROM stories s LEFT JOIN categories
 <div class="tablewrap"><table><thead><tr><th>Title</th><th>Section</th><th>Category</th><th>Year</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead><tbody>
 <?php foreach($rows as $r):?><tr><td><?=e($r['title'])?></td><td><?=e($r['story_type']==='HUMAN'?'Human story':'Disaster history')?></td><td><?=e($r['category']??'—')?></td><td><?=e($r['year_label'])?></td><td><span class="badge <?=strtolower($r['status'])?>"><?=e($r['status'])?></span></td><td><?=e($r['updated_at'])?></td><td><a class="btn secondary" href="<?=BASE_URL?>/admin/story-edit.php?id=<?=$r['id']?>">Edit</a> <?php if(user()['role']==='ADMIN'):?><a class="btn danger" data-confirm="Delete this story?" href="?delete=<?=$r['id']?>">Delete</a><?php endif;?></td></tr><?php endforeach;?>
 <?php if(!$rows):?><tr><td colspan="6">No stories found.</td></tr><?php endif;?></tbody></table></div></div>
-<?php require_once __DIR__.'/_footer.php';
+ 

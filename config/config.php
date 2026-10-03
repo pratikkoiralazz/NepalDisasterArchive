@@ -39,6 +39,17 @@ if ($appUrl !== '') {
     define('APP_URL', '');
 }
 define('SITE_NAME', 'Nepal Disaster Archive');
+$donationUrl = trim((string)(getenv('DONATION_URL') ?: ''));
+if ($donationUrl !== '') {
+    $donationUrlParts = parse_url($donationUrl);
+    if ($donationUrlParts === false
+        || strtolower($donationUrlParts['scheme'] ?? '') !== 'https'
+        || empty($donationUrlParts['host'])
+        || !filter_var($donationUrl, FILTER_VALIDATE_URL)) {
+        throw new RuntimeException('DONATION_URL must be a valid absolute HTTPS URL.');
+    }
+}
+define('DONATION_URL', $donationUrl);
 
 function db(): PDO {
     static $pdo = null;
@@ -116,34 +127,33 @@ function slugify(string $text): string {
 }
 
 function live_data_version(): string {
-    static $tables = [
-        'admins' => ['id', 'name', 'email', 'role'],
-        'categories' => ['id', 'name', 'slug', 'description'],
-        'stories' => ['id', 'status', 'story_type', 'updated_at'],
-        'documentaries' => ['id', 'status', 'updated_at'],
-        'emergency_contacts' => ['id', 'active', 'updated_at'],
-        'correction_reports' => ['id', 'status', 'created_at'],
-        'story_submissions' => ['id', 'status', 'reviewed_at', 'created_at'],
-        'volunteers' => ['id', 'status', 'updated_at'],
-        'story_images' => ['id', 'story_id', 'caption', 'credit', 'sort_order', 'created_at'],
-        'story_sources' => ['id', 'story_id', 'title', 'publisher', 'url', 'published_on', 'verified'],
-        'story_revisions' => ['id', 'story_id', 'title', 'created_at'],
+    static $snapshots = [
+        'admins' => ['created_at', 'CONCAT_WS(CHAR(31),`name`,`email`,`role`)'],
+        'categories' => ['created_at', 'CONCAT_WS(CHAR(31),`name`,`slug`,`description`)'],
+        'stories' => ['updated_at', 'NULL'],
+        'documentaries' => ['updated_at', 'NULL'],
+        'emergency_contacts' => ['updated_at', 'NULL'],
+        'correction_reports' => ['created_at', 'CONCAT_WS(CHAR(31),`status`,`name`,`email`,`message`)'],
+        'story_submissions' => ['created_at', 'CONCAT_WS(CHAR(31),`status`,`reviewed_at`)'],
+        'volunteers' => ['updated_at', 'NULL'],
+        'story_images' => ['created_at', 'CONCAT_WS(CHAR(31),`story_id`,`image_path`,`caption`,`credit`,`sort_order`)'],
+        'story_sources' => [null, 'CONCAT_WS(CHAR(31),`story_id`,`title`,`publisher`,`url`,`published_on`,`verified`)'],
+        'story_revisions' => ['created_at', 'NULL'],
     ];
-    $hash = hash_init('sha256');
+    $queries = [];
 
-    foreach ($tables as $table => $columns) {
-        $quotedColumns = implode(',', array_map(
-            static fn(string $column): string => '`'.$column.'`',
-            $columns
-        ));
-        $rows = db()->query('SELECT '.$quotedColumns.' FROM `'.$table.'` ORDER BY `id`');
-        hash_update($hash, $table."\0");
-        while ($row = $rows->fetch(PDO::FETCH_NUM)) {
-            hash_update($hash, json_encode($row, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)."\0");
-        }
+    foreach ($snapshots as $table => [$timestampColumn, $contentExpression]) {
+        $changedAt = $timestampColumn === null ? 'NULL' : 'MAX(`'.$timestampColumn.'`)';
+        $contentHash = $contentExpression === 'NULL'
+            ? '0'
+            : 'COALESCE(BIT_XOR(CRC32('.$contentExpression.')),0)';
+        $queries[] = "SELECT '".$table."' AS table_name, COUNT(*) AS row_count, "
+            ."COALESCE(MAX(`id`),0) AS max_id, ".$changedAt." AS changed_at, "
+            .$contentHash." AS content_hash FROM `".$table."`";
     }
 
-    return hash_final($hash);
+    $rows = db()->query(implode(' UNION ALL ', $queries))->fetchAll(PDO::FETCH_NUM);
+    return hash('sha256', json_encode($rows, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
 function nepal_locations(): array {

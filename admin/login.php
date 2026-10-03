@@ -17,4 +17,4 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     <div class="field">
         <label>Email</label>
         <input type="email" name="email" required>
-    </div><br><div class="field"><label>Password</label><input type="password" name="password" required></div><br><button>Sign in</button></form></div><script>(function(){var icon=document.createElement('link');icon.rel='icon';icon.type='image/svg+xml';icon.href=<?=json_encode(BASE_URL . '/favicon.svg')?>;document.head.appendChild(icon)})();</script></body></html>
+    </div><br><div class="field"><label>Password</label><input type="password" name="password" required></div><br><button>Sign in</button>    </form></div><script>(function(){var icon=document.createElement('link');icon.rel='icon';icon.type='image/svg+xml';icon.href=<?=json_encode(BASE_URL . '/favicon.svg')?>;document.head.appendChild(icon)})();</script></body></html>

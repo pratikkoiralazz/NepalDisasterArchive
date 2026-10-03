@@ -153,4 +153,3 @@ $rows = db()->query('SELECT id,name,email,role,created_at FROM admins ORDER BY c
         </table>
     </div>
 </div>
-<?php require_once __DIR__ . '/_footer.php';
