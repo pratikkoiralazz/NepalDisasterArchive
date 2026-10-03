@@ -10,6 +10,23 @@ define('DB_USER', getenv('DB_USER') ?: 'root');
 define('DB_PASS', getenv('DB_PASS') ?: '');
 $baseUrl = getenv('BASE_URL');
 define('BASE_URL', $baseUrl === false || trim($baseUrl, '/') === '' ? '' : '/' . trim($baseUrl, '/'));
+$appUrl = rtrim(trim((string)(getenv('APP_URL') ?: '')), '/');
+if ($appUrl !== '') {
+    $appUrlParts = parse_url($appUrl);
+    if ($appUrlParts === false
+        || !in_array(strtolower($appUrlParts['scheme'] ?? ''), ['http', 'https'], true)
+        || empty($appUrlParts['host'])
+        || isset($appUrlParts['user'])
+        || isset($appUrlParts['pass'])
+        || isset($appUrlParts['query'])
+        || isset($appUrlParts['fragment'])
+        || (isset($appUrlParts['path']) && $appUrlParts['path'] !== '')) {
+        throw new RuntimeException('APP_URL must be an absolute http(s) origin without a path.');
+    }
+    define('APP_URL', $appUrl);
+} else {
+    define('APP_URL', '');
+}
 define('SITE_NAME', 'Nepal Disaster Archive');
 
 function db(): PDO {
@@ -27,6 +44,25 @@ function db(): PDO {
     return $pdo;
 }
 function e(?string $v): string { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
+function absolute_url(string $path): string {
+    if (!str_starts_with($path, '/') || str_starts_with($path, '//') || preg_match('/[\r\n]/', $path)) {
+        throw new InvalidArgumentException('URL path must be a safe local path.');
+    }
+
+    $origin = APP_URL;
+    if ($origin === '') {
+        $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '';
+        if ($host === '' || preg_match('/[^A-Za-z0-9.:\-\[\]]/', $host)) {
+            throw new RuntimeException('Set APP_URL to the public site origin to generate share links.');
+        }
+        $forwardedProto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')[0]));
+        $isHttps = (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off')
+            || $forwardedProto === 'https';
+        $origin = ($isHttps ? 'https://' : 'http://') . $host;
+    }
+
+    return $origin . rtrim(BASE_URL, '/') . $path;
+}
 function redirect(string $path): never {
     if (!str_starts_with($path, '/') || str_starts_with($path, '//') || preg_match('/[\r\n]/', $path)) {
         throw new InvalidArgumentException('Redirect path must be a safe local path.');
