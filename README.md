@@ -34,7 +34,7 @@ The Docker image uses Apache's `/var/www/html` document root. Configure these en
 - `DB_NAME`: application database name
 - `DB_USER`: database username
 - `DB_PASS`: database password
-- `BASE_URL`: optional URL path prefix, such as `/archive`; leave unset or empty when the site is served from the domain root
+- `BASE_URL`: optional URL path prefix, such as `/archive`; leave unset to detect the app subfolder from the request path, or set it to an empty value when the site is served from the domain root
 - `APP_URL`: public site origin, for example `https://archive.example.org` (scheme and hostname only, with no path). Set this in production so shared links use the canonical HTTPS domain.
 
 Import the SQL schema into the managed database before starting the app. If the cloud platform uses replaceable containers or a read-only application filesystem, attach persistent writable storage for `/var/www/html/uploads` so submitted photos and story images survive deployments. Serve the site over HTTPS and keep database credentials in the platform's secret/environment configuration.

@@ -9,7 +9,18 @@ define('DB_NAME', getenv('DB_NAME') ?: 'nepal_disaster_archive');
 define('DB_USER', getenv('DB_USER') ?: 'root');
 define('DB_PASS', getenv('DB_PASS') ?: '');
 $baseUrl = getenv('BASE_URL');
-define('BASE_URL', $baseUrl === false || trim($baseUrl, '/') === '' ? '' : '/' . trim($baseUrl, '/'));
+if ($baseUrl === false) {
+    $scriptDirectory = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
+    if (preg_match('#/admin$#', $scriptDirectory)) {
+        $scriptDirectory = substr($scriptDirectory, 0, -strlen('/admin'));
+    }   
+    if ($scriptDirectory === '.' || $scriptDirectory === '/') {
+        $scriptDirectory = '';
+    }
+    $baseUrl = $scriptDirectory;
+}
+$baseUrl = trim($baseUrl);
+define('BASE_URL', $baseUrl === '' || trim($baseUrl, '/') === '' ? '' : '/' . trim($baseUrl, '/'));
 $appUrl = rtrim(trim((string)(getenv('APP_URL') ?: '')), '/');
 if ($appUrl !== '') {
     $appUrlParts = parse_url($appUrl);
