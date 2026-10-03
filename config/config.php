@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+ob_start();
 session_start();
 
 // Use environment variables provided by cloud hosting or fallback to defaults
@@ -7,7 +8,8 @@ define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
 define('DB_NAME', getenv('DB_NAME') ?: 'nepal_disaster_archive');
 define('DB_USER', getenv('DB_USER') ?: 'root');
 define('DB_PASS', getenv('DB_PASS') ?: '');
-define('BASE_URL', getenv('BASE_URL') !== false ? getenv('BASE_URL') : '');
+$baseUrl = getenv('BASE_URL');
+define('BASE_URL', $baseUrl === false || trim($baseUrl, '/') === '' ? '' : '/' . trim($baseUrl, '/'));
 define('SITE_NAME', 'Nepal Disaster Archive');
 
 function db(): PDO {
@@ -25,7 +27,29 @@ function db(): PDO {
     return $pdo;
 }
 function e(?string $v): string { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
-function redirect(string $path): never { header('Location: '.BASE_URL.$path); exit; }
+function redirect(string $path): never {
+    if (!str_starts_with($path, '/') || str_starts_with($path, '//') || preg_match('/[\r\n]/', $path)) {
+        throw new InvalidArgumentException('Redirect path must be a safe local path.');
+    }
+
+    $location = rtrim(BASE_URL, '/') . '/' . ltrim($path, '/');
+    if (!headers_sent()) {
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+        header('Location: ' . $location, true, 303);
+        exit;
+    }
+
+    error_log('Redirect requested after response headers were sent; using client-side navigation.');
+    $safeLocation = json_encode($location, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url='
+        . htmlspecialchars($location, ENT_QUOTES, 'UTF-8')
+        . '"><title>Redirecting</title></head><body><script>window.location.replace('
+        . $safeLocation
+        . ');</script><a href="' . htmlspecialchars($location, ENT_QUOTES, 'UTF-8') . '">Continue</a></body></html>';
+    exit;
+}
 function csrf_token(): string {
     if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
     return $_SESSION['csrf'];

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/_header.php';
+require_once __DIR__ . '/../config/auth.php';
 require_admin();
 $page_title = 'Human Story Submissions';
 
@@ -225,6 +225,7 @@ $sections = [
     'APPROVED' => 'Approved stories',
     'REJECTED' => 'Rejected stories',
 ];
+require_once __DIR__ . '/_header.php';
 ?><style>
 .submission-list{display:grid;gap:28px}
 .submission-section h2{font:700 24px Georgia,serif;margin:0 0 12px}

@@ -26,6 +26,18 @@ Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal'
 - PHP extensions: PDO MySQL and mbstring
 - A modern web browser
 
+## Cloud deployment
+
+The Docker image uses Apache's `/var/www/html` document root. Configure these environment variables in the cloud service instead of putting production database credentials in source:
+
+- `DB_HOST`: managed MySQL hostname
+- `DB_NAME`: application database name
+- `DB_USER`: database username
+- `DB_PASS`: database password
+- `BASE_URL`: optional URL path prefix, such as `/archive`; leave unset or empty when the site is served from the domain root
+
+Import the SQL schema into the managed database before starting the app. If the cloud platform uses replaceable containers or a read-only application filesystem, attach persistent writable storage for `/var/www/html/uploads` so submitted photos and story images survive deployments. Serve the site over HTTPS and keep database credentials in the platform's secret/environment configuration.
+
 ## Installation with XAMPP
 
 1. Place this project in the XAMPP web root:
@@ -106,12 +118,5 @@ Historical dates, casualty figures, and magnitudes may vary between sources. Add
 └── uploads/stories/       Story media upload directory
 ```
 
-## Security notes
 
-- Do not leave `create-admin.php` accessible after creating the first account.
-- Use a strong database password outside a local development environment.
-- Run the application behind HTTPS in production.
-- Keep PHP, MySQL, and the web server updated.
-- Back up the database and uploaded files regularly.
-
-sunset00x (github & linkedin)
+pratikkoiralazz (github & linkedin)
