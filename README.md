@@ -35,7 +35,7 @@ The Docker image uses Apache's `/var/www/html` document root. Configure these en
 
 Public pages use clean URLs (for example, `/about` and `/preparedness`), and story pages use `/story/<slug>`. Existing `.php` page URLs redirect to their clean versions. The Docker image enables Apache `mod_rewrite`, permits the app's rewrite rules, and installs GD/FreeType for 1200×630 Facebook story preview images. Rebuild and redeploy the image after changing these Apache settings.
 
-Public and admin pages check for content changes every 20 seconds and refresh automatically when no form has unsaved changes. If a form has been edited, the page shows a refresh prompt instead of discarding the work.
+Public and admin pages check for content changes every 10 seconds and refresh automatically when no form has unsaved changes. If a form has been edited, the page shows a refresh prompt instead of discarding the work.
 
 - `DB_HOST`: managed MySQL hostname
 - `DB_NAME`: application database name
@@ -48,6 +48,8 @@ Public and admin pages check for content changes every 20 seconds and refresh au
 Import the SQL schema into the managed database before starting the app. If the cloud platform uses replaceable containers or a read-only application filesystem, attach persistent writable storage for `/var/www/html/uploads` so submitted photos and story images survive deployments. Serve the site over HTTPS and keep database credentials in the platform's secret/environment configuration.
 
 For the News feature, run [`upgrade-news.sql`](upgrade-news.sql) against the same database configured for the application after importing the existing schema and before deploying the application files. If the site reports that `news_articles` does not exist, select the configured database in your database administration tool and run this migration there; do not change the database credentials just to work around a missing table. The migration is safe to run again. News images are stored in `uploads/news`, so include that path in persistent upload storage.
+
+For persistent per-admin notification read state, run [`upgrade-admin-notifications.sql`](upgrade-admin-notifications.sql) against the same configured database before deploying this version. This prevents already-viewed correction reports, human submissions, and volunteer registrations from returning as new notifications when a PHP session changes.
 
 ## Search engine setup
 
@@ -74,7 +76,7 @@ Google decides when to index pages and how to display a site's name in results; 
 
 3. Create the database by importing [`database/schema.sql`](database/schema.sql) in phpMyAdmin, or run it with the MySQL client. The script creates the `nepal_disaster_archive` database, tables, default categories, and a starter story.
 
-   Then run [`upgrade-news.sql`](upgrade-news.sql) in the same database to create the News feature table.
+   Then run [`upgrade-news.sql`](upgrade-news.sql) and [`upgrade-admin-notifications.sql`](upgrade-admin-notifications.sql) in the same database to create the News and persistent notification tables.
 
 4. Check the database settings in [`config/config.php`](config/config.php):
 

@@ -42,5 +42,5 @@
         window.location.reload();
     });
     document.addEventListener('visibilitychange', checkForUpdates);
-    window.setInterval(checkForUpdates, 20000);
+    window.setInterval(checkForUpdates, 10000);
 })();

@@ -1,30 +1,36 @@
 <?php
 require_once __DIR__.'/../config/auth.php'; require_login();
+header('Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
 $me=user(); $flash=get_flash();
 $notification_sources = [
-    'stories' => ['table' => 'story_submissions', 'status' => 'SUBMITTED', 'page' => 'human-submissions.php'],
-    'corrections' => ['table' => 'correction_reports', 'status' => 'OPEN', 'page' => 'corrections.php'],
-    'volunteers' => ['table' => 'volunteers', 'status' => 'PENDING', 'page' => 'volunteers.php'],
+    'stories' => ['table' => 'story_submissions', 'status' => 'SUBMITTED', 'page' => 'human-submissions'],
+    'corrections' => ['table' => 'correction_reports', 'status' => 'OPEN', 'page' => 'corrections'],
+    'volunteers' => ['table' => 'volunteers', 'status' => 'PENDING', 'page' => 'volunteers'],
 ];
 if ($me['role'] === 'ADMIN') {
-    $notification_read_key = 'admin_notification_read_' . (int)$me['id'];
-    if (!isset($_SESSION[$notification_read_key]) || !is_array($_SESSION[$notification_read_key])) {
-        $_SESSION[$notification_read_key] = [];
-    }
-    $current_admin_page = basename($_SERVER['SCRIPT_NAME'] ?? '');
+    $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    $current_admin_page = basename(is_string($requestPath) ? $requestPath : ($_SERVER['SCRIPT_NAME'] ?? ''));
+    $current_admin_page = preg_replace('/\.php$/i', '', $current_admin_page);
     $admin_notifications = [];
     foreach ($notification_sources as $key => $source) {
         if ($current_admin_page === $source['page']) {
             $latestId = (int)db()->query('SELECT COALESCE(MAX(id),0) FROM '.$source['table'])->fetchColumn();
-            $_SESSION[$notification_read_key][$key] = max(
-                (int)($_SESSION[$notification_read_key][$key] ?? 0),
-                $latestId
+            $markRead = db()->prepare(
+                'INSERT INTO admin_notification_reads(admin_id,notification_type,last_read_id) VALUES(?,?,?) '
+                .'ON DUPLICATE KEY UPDATE last_read_id=GREATEST(last_read_id,VALUES(last_read_id)),updated_at=CURRENT_TIMESTAMP'
             );
+            $markRead->execute([(int)$me['id'], $key, $latestId]);
         }
+        $readQuery = db()->prepare(
+            'SELECT last_read_id FROM admin_notification_reads WHERE admin_id=? AND notification_type=?'
+        );
+        $readQuery->execute([(int)$me['id'], $key]);
+        $lastReadId = (int)($readQuery->fetchColumn() ?: 0);
         $count = db()->prepare('SELECT COUNT(*) FROM '.$source['table'].' WHERE status=? AND id>?');
         $count->execute([
             $source['status'],
-            (int)($_SESSION[$notification_read_key][$key] ?? 0),
+            $lastReadId,
         ]);
         $admin_notifications[$key] = (int)$count->fetchColumn();
     }
