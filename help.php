@@ -21,11 +21,21 @@ require_once __DIR__.'/config/config.php';
 </head>
 <body>
 <?php require __DIR__.'/includes/public-nav.php'; ?>
-<header class="hero"><div class="wrap"><div class="eyebrow">Support public-interest information</div><h1>Help us build a lasting home for the archive.</h1><p>The Nepal Disaster Archive brings disaster history, lived experience, and preparedness information together. Support can help us secure our own domain and dependable hosting.</p></div></header>
+<header class="hero"><div class="wrap"><div class="eyebrow">Support public-interest information</div><h1>Help us build a lasting home for the archive.</h1><p>The Nepal Disaster Archive brings together centuries of disaster history, survivor stories, and vital preparedness data into a single, open public resource. Support can help us secure our own domain and dependable hosting.</p></div></header>
 <main class="content wrap">
     <section class="panel">
         <h2>Support the archive</h2>
-        <p>Contributions are optional and will help with the costs of domain registration, web hosting, and keeping this public resource available. Any future fundraising will be handled transparently and used for the archive’s operating needs.</p>
+<p>As an independent initiative managed under AcademiX Digital, community support directly helps us cover essential operational expenses—including custom domain registration and reliable web hosting—to keep this platform online and accessible to everyone.</p>
+
+<p>We want to be clear: there is zero obligation to contribute. Our core archives and educational resources will always remain free and open to everyone. However, if you genuinely value our work and would like to help us cover these domain and hosting costs, your support is deeply appreciated.</p>
+
+<h3>Important Notes on Contributing</h3>
+<ul style="list-style-type: none; padding-left: 0; margin-top: 16px;">
+    <li style="margin-bottom: 20px; line-height: 1.8; font-size: 17px; color: #4f5757;"><strong style="color: #17202a;">Strictly Voluntary:</strong> Support is entirely optional—please enjoy and use the archive regardless of whether you contribute.</li>
+    <li style="margin-bottom: 20px; line-height: 1.8; font-size: 17px; color: #4f5757;"><strong style="color: #17202a;">Directly Applied:</strong> Any contributions go straight toward keeping the site online, secure, and running smoothly.</li>
+    <li style="margin-bottom: 20px; line-height: 1.8; font-size: 17px; color: #4f5757;"><strong style="color: #17202a;">Security Notice:</strong> For your safety, never send payment details, card info, or passwords through email or social media direct messages.</li>
+</ul>
+ 
         <?php if (DONATION_URL !== ''): ?>
             <a class="support" href="<?=e(DONATION_URL)?>" target="_blank" rel="noopener noreferrer">Support us with Buy Me a MoMo</a>
         <?php else: ?>
