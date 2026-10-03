@@ -19,6 +19,7 @@
                 <h2>Explore</h2>
                 <a href="<?=e(BASE_URL)?>/">Disaster archive</a>
                 <a href="<?=e(BASE_URL)?>/human-stories">Human stories</a>
+                <a href="<?=e(BASE_URL)?>/news">Latest news</a>
                 <a href="<?=e(BASE_URL)?>/documentaries">Documentaries</a>
                 <a href="<?=e(BASE_URL)?>/resources">Emergency help</a>
                 <a href="<?=e(BASE_URL)?>/preparedness">Preparedness guides</a>

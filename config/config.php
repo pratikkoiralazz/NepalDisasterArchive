@@ -131,6 +131,7 @@ function live_data_version(): string {
         'admins' => ['created_at', 'CONCAT_WS(CHAR(31),`name`,`email`,`role`)'],
         'categories' => ['created_at', 'CONCAT_WS(CHAR(31),`name`,`slug`,`description`)'],
         'stories' => ['updated_at', 'NULL'],
+        'news_articles' => ['updated_at', 'NULL'],
         'documentaries' => ['updated_at', 'NULL'],
         'emergency_contacts' => ['updated_at', 'NULL'],
         'correction_reports' => ['created_at', 'CONCAT_WS(CHAR(31),`status`,`name`,`email`,`message`)'],

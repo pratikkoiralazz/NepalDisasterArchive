@@ -61,7 +61,7 @@ $background = imagecolorallocate($image, 23, 32, 42);
 $panel = imagecolorallocate($image, 31, 48, 60);
 $red = imagecolorallocate($image, 158, 43, 37);
 $white = imagecolorallocate($image, 255, 255, 255);
-$muted = imagecolorallocate($image, 221, 228, 232);
+$muted = imagecolorallocate($image, 221, 228, 232); 
 $soft = imagecolorallocate($image, 210, 173, 147);
 imagefill($image, 0, 0, $background);
 
@@ -95,7 +95,6 @@ if ($uploadRoot !== false && $coverPath !== false
                 $cropWidth,
                 $cropHeight
             );
-            imagedestroy($cover);
         }
     }
 }
@@ -179,4 +178,3 @@ header('Content-Disposition: inline; filename="nepal-disaster-story.png"');
 header('Cache-Control: public, max-age=31536000, immutable');
 header('X-Content-Type-Options: nosniff');
 imagepng($image);
-imagedestroy($image);

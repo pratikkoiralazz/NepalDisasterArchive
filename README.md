@@ -5,6 +5,7 @@ Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal'
 ## Features
 
 - Public archive of published disaster stories
+- News archive with admin-managed reports, summaries, sources, publication status, and cover images
 - Search by title, location, year, summary, or content
 - Filter stories by hazard category
 - Story fields for dates, locations, impacts, casualties, magnitude, and sources
@@ -46,6 +47,8 @@ Public and admin pages check for content changes every 20 seconds and refresh au
 
 Import the SQL schema into the managed database before starting the app. If the cloud platform uses replaceable containers or a read-only application filesystem, attach persistent writable storage for `/var/www/html/uploads` so submitted photos and story images survive deployments. Serve the site over HTTPS and keep database credentials in the platform's secret/environment configuration.
 
+For the News feature, run [`upgrade-news.sql`](upgrade-news.sql) once against the database after importing the existing schema and before deploying the application files. News images are stored in `uploads/news`, so include that path in persistent upload storage.
+
 ## Installation with XAMPP
 
 1. Place this project in the XAMPP web root:
@@ -57,6 +60,8 @@ Import the SQL schema into the managed database before starting the app. If the 
 2. Start **Apache** and **MySQL** from the XAMPP Control Panel.
 
 3. Create the database by importing [`database/schema.sql`](database/schema.sql) in phpMyAdmin, or run it with the MySQL client. The script creates the `nepal_disaster_archive` database, tables, default categories, and a starter story.
+
+   Then run [`upgrade-news.sql`](upgrade-news.sql) in the same database to create the News feature table.
 
 4. Check the database settings in [`config/config.php`](config/config.php):
 
@@ -110,6 +115,8 @@ The seed file is safe to run more than once because each story has a unique slug
 4. Save the story as a draft while it is being reviewed.
 5. Change the status to `PUBLISHED` when it is ready for the public archive.
 6. Mark important stories as featured when appropriate.
+
+Use **News** in the admin sidebar to draft or publish news reports. Add a clear summary, identify the reporting source, and include its original URL when available. Published reports appear on `/news` and have their own shareable detail page.
 
 Historical dates, casualty figures, and magnitudes may vary between sources. Add source notes and clearly communicate uncertainty where appropriate.
 

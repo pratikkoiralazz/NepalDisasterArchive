@@ -12,6 +12,7 @@ RewriteRule ^(.+)\.php$ %1 [R=301,L,NE]
 
 RewriteRule ^story/([A-Za-z0-9_-]+)/?$ story.php?slug=$1 [B,L,QSA]
 RewriteRule ^story-image/([A-Za-z0-9_-]+)\.png$ story-share-image.php?slug=$1 [B,L,QSA]
+RewriteRule ^news/([A-Za-z0-9_-]+)/?$ news-story.php?slug=$1 [B,L,QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

@@ -4,6 +4,7 @@ $navItems = [
     ['label' => 'Home', 'href' => BASE_URL . '/#home', 'pages' => ['index.php'], 'section' => 'home'],
     ['label' => 'Stories', 'href' => BASE_URL . '/#stories', 'pages' => ['story.php'], 'section' => 'stories'],
     ['label' => 'Categories', 'href' => BASE_URL . '/#hazards', 'pages' => [], 'section' => 'hazards'],
+    ['label' => 'News', 'href' => BASE_URL . '/#news', 'pages' => ['news.php', 'news-story.php'], 'section' => 'news'],
     ['label' => 'Explore', 'href' => BASE_URL . '/#explore', 'pages' => [], 'section' => 'explore'],
     ['label' => 'Emergency Help', 'href' => BASE_URL . '/resources', 'pages' => ['resources.php']],
     ['label' => 'Guides', 'href' => BASE_URL . '/preparedness', 'pages' => ['preparedness.php']],
