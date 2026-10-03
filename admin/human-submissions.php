@@ -78,6 +78,65 @@ function delete_published_human_story(PDO $pdo, array $submission): void
     }
 }
 
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && (isset($_POST['approve']) || isset($_POST['reject']))) {
+    verify_csrf();
+    $action = isset($_POST['approve']) ? 'approve' : 'reject';
+    $submissionId = filter_var($_POST[$action], FILTER_VALIDATE_INT);
+    if ($submissionId === false || $submissionId < 1) {
+        flash('error', 'Select a valid submission to review.');
+        redirect('/admin/human-submissions.php');
+    }
+
+    $pdo = db();
+    if ($action === 'reject') {
+        $reject = $pdo->prepare("UPDATE story_submissions SET status='REJECTED',reviewed_by=?,reviewed_at=NOW() WHERE id=? AND status='SUBMITTED'");
+        $reject->execute([user()['id'], (int)$submissionId]);
+        if ($reject->rowCount() === 1) {
+            log_admin_activity('reject_story_submission', (string)$submissionId);
+            flash('success', 'Submission rejected.');
+        } else {
+            flash('error', 'This submission has already been reviewed.');
+        }
+        redirect('/admin/human-submissions.php');
+    }
+
+    try {
+        $pdo->beginTransaction();
+        $submissionQuery = $pdo->prepare("SELECT * FROM story_submissions WHERE id=? AND status='SUBMITTED' FOR UPDATE");
+        $submissionQuery->execute([(int)$submissionId]);
+        $submission = $submissionQuery->fetch();
+        if (!$submission) {
+            throw new RuntimeException('Submission is no longer pending.');
+        }
+        $title = human_submission_story_title($submission);
+        $slug = slugify($title) . '-' . (int)$submission['id'];
+        $existing = $pdo->prepare(
+            "SELECT id FROM stories
+             WHERE story_type='HUMAN' AND status='PUBLISHED'
+               AND (slug=? OR (title=? AND content=?))
+             LIMIT 1"
+        );
+        $existing->execute([$slug, $title, $submission['story_content'] ?? '']);
+        if (!$existing->fetch()) {
+            publish_human_story($pdo, $submission, (int)user()['id']);
+        }
+        $approve = $pdo->prepare("UPDATE story_submissions SET status='APPROVED',reviewed_by=?,reviewed_at=NOW() WHERE id=? AND status='SUBMITTED'");
+        $approve->execute([user()['id'], (int)$submissionId]);
+        if ($approve->rowCount() !== 1) {
+            throw new RuntimeException('Submission was already reviewed.');
+        }
+        $pdo->commit();
+        log_admin_activity('approve_story_submission', (string)$submissionId);
+        flash('success', 'Human story published.');
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        flash('error', 'Could not approve this submission. It may already have been reviewed.');
+    }
+    redirect('/admin/human-submissions.php');
+}
+
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['delete_selected'])) {
     verify_csrf();
     $selectedIds = [];
@@ -135,56 +194,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['delete_sel
     redirect('/admin/human-submissions.php');
 }
 
-if (isset($_GET['reject'])) {
-    db()->prepare("UPDATE story_submissions SET status='REJECTED',reviewed_by=?,reviewed_at=NOW() WHERE id=? AND status='SUBMITTED'")
-        ->execute([user()['id'], (int)$_GET['reject']]);
-    log_admin_activity('reject_story_submission', (string)$_GET['reject']);
-    flash('success', 'Submission rejected.');
-    redirect('/admin/human-submissions.php');
-}
-
-if (isset($_GET['approve'])) {
-    $id = (int)$_GET['approve'];
-    try {
-        $pdo = db();
-        $pdo->beginTransaction();
-        $s = $pdo->prepare("SELECT * FROM story_submissions WHERE id=? AND status IN ('SUBMITTED','APPROVED') FOR UPDATE");
-        $s->execute([$id]);
-        $submission = $s->fetch();
-        if (!$submission) {
-            throw new RuntimeException('Submission is no longer pending.');
-        }
-        $existing = $pdo->prepare("SELECT id FROM stories WHERE slug=? OR (title=? AND story_type='HUMAN' AND status='PUBLISHED' AND content=?) LIMIT 1");
-        $existing->execute([
-            slugify(trim((string)($submission['title'] ?? ''))) . '-' . $id,
-            trim((string)($submission['title'] ?? '')),
-            $submission['story_content'] ?? '',
-        ]);
-        if (!$existing->fetch()) {
-            publish_human_story($pdo, $submission, user()['id']);
-        }
-        $pdo->prepare("UPDATE story_submissions SET status='APPROVED',reviewed_by=?,reviewed_at=NOW() WHERE id=?")
-            ->execute([user()['id'], $id]);
-        $pdo->commit();
-        log_admin_activity('approve_story_submission', (string)$id);
-        flash('success', 'Human story published.');
-    } catch (Throwable $e) {
-        if (isset($pdo) && $pdo->inTransaction()) {
-            $pdo->rollBack();
-        }
-        flash('error', 'Could not approve this submission.');
-    }
-    redirect('/admin/human-submissions.php');
-}
-
 $rows = db()->query('SELECT * FROM story_submissions ORDER BY FIELD(status,"SUBMITTED","APPROVED","REJECTED"),created_at DESC')->fetchAll();
 foreach ($rows as $row) {
     if ($row['status'] !== 'APPROVED') {
         continue;
     }
-    $storyExists = db()->prepare("SELECT id FROM stories WHERE story_type='HUMAN' AND status='PUBLISHED' AND ((slug=? AND slug IS NOT NULL) OR (title=? AND content=?)) LIMIT 1");
-    $slug = slugify(trim((string)($row['title'] ?? ''))) . '-' . (int)$row['id'];
-    $storyExists->execute([$slug, trim((string)($row['title'] ?? '')), $row['story_content'] ?? '']);
+    $title = human_submission_story_title($row);
+    $storyExists = db()->prepare("SELECT id FROM stories WHERE story_type='HUMAN' AND status='PUBLISHED' AND (slug=? OR (title=? AND content=?)) LIMIT 1");
+    $slug = slugify($title) . '-' . (int)$row['id'];
+    $storyExists->execute([$slug, $title, $row['story_content'] ?? '']);
     if ($storyExists->fetch()) {
         continue;
     }
@@ -280,8 +298,8 @@ $sections = [
                                         <div class="submission-body"><?= e($row['story_content']) ?></div>
                                         <?php if ($row['status'] === 'SUBMITTED'): ?>
                                             <div class="submission-actions">
-                                                <a class="btn" data-confirm="Publish this human story?" href="?approve=<?= (int)$row['id'] ?>">Approve &amp; publish</a>
-                                                <a class="btn danger" data-confirm="Reject this submission?" href="?reject=<?= (int)$row['id'] ?>">Reject</a>
+                                                <button class="btn" type="submit" name="approve" value="<?= (int)$row['id'] ?>" data-confirm="Publish this human story?">Approve &amp; publish</button>
+                                                <button class="btn danger" type="submit" name="reject" value="<?= (int)$row['id'] ?>" data-confirm="Reject this submission?">Reject</button>
                                             </div>
                                         <?php endif; ?>
                                     </div>

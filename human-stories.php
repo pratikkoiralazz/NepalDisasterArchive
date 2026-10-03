@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/config/config.php';
-$submissionSent=false;$submissionError='';
+$submissionSent=!empty($_SESSION['human_story_submitted']);unset($_SESSION['human_story_submitted']);$submissionError='';
 if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'&&isset($_POST['submit_story'])){
  verify_csrf();
  $title=trim($_POST['title']??'');$name=trim($_POST['storyteller_name']??'');$role=trim($_POST['storyteller_role']??'');$email=trim($_POST['email']??'');$location=trim($_POST['location']??'');$eventDate=trim($_POST['event_date']??'');$content=trim($_POST['story_content']??'');$anonymous=isset($_POST['is_anonymous'])?1:0;
@@ -10,7 +10,7 @@ if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'&&isset($_POST['submit_story'])){
  else{
   $imagePath=null;
   if(!empty($_FILES['photo']['name'])&&is_uploaded_file($_FILES['photo']['tmp_name'])){$allowed=['image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp'];$mime=(new finfo(FILEINFO_MIME_TYPE))->file($_FILES['photo']['tmp_name']);if(!isset($allowed[$mime])||$_FILES['photo']['size']>5242880)$submissionError='Photos must be JPG, PNG, or WebP files up to 5 MB.';else{$dir=__DIR__.'/uploads/story-submissions';if(!is_dir($dir))mkdir($dir,0755,true);$file=bin2hex(random_bytes(12)).'.'.$allowed[$mime];if(move_uploaded_file($_FILES['photo']['tmp_name'],$dir.'/'.$file))$imagePath='uploads/story-submissions/'.$file;}}
-  if($submissionError===''){try{$s=db()->prepare('INSERT INTO story_submissions(title,storyteller_name,storyteller_role,email,location,event_date,story_content,image_path,is_anonymous,consent_confirmed) VALUES(?,?,?,?,?,?,?,?,?,?)');$s->execute([$title,$name?:null,$role?:null,$email?:null,$location?:null,$eventDate?:null,$content,$imagePath,$anonymous,1]);$submissionSent=true;}catch(Throwable $e){$submissionError='We could not receive your story right now. Please try again later.';}}
+  if($submissionError===''){try{$s=db()->prepare('INSERT INTO story_submissions(title,storyteller_name,storyteller_role,email,location,event_date,story_content,image_path,is_anonymous,consent_confirmed) VALUES(?,?,?,?,?,?,?,?,?,?)');$s->execute([$title,$name?:null,$role?:null,$email?:null,$location?:null,$eventDate?:null,$content,$imagePath,$anonymous,1]);$_SESSION['human_story_submitted']=true;redirect('/human-stories.php#submit-story');}catch(Throwable $e){$submissionError='We could not receive your story right now. Please try again later.';}}
  }
 }
 $q=trim($_GET['q']??'');$province=trim($_GET['province']??'');$district=trim($_GET['district']??'');$where="WHERE s.status='PUBLISHED' AND s.story_type='HUMAN'";$params=[];
