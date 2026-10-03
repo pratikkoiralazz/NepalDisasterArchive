@@ -11,6 +11,7 @@ $categories = db()->query('SELECT name FROM categories ORDER BY name')->fetchAll
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Learn about the Nepal Disaster Archive, its mission, features, sources, editorial approach, and project credit.">
     <title>About the Nepal Disaster Archive</title>
+    <link rel="canonical" href="<?=e(absolute_url('/about'))?>">
     <style>
         :root{--ink:#17202a;--paper:#f7f3ed;--red:#9e2b25;--green:#263d3a;--line:#d9d0c6;--muted:#59625f}
         *{box-sizing:border-box}

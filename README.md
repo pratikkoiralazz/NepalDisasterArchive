@@ -47,7 +47,20 @@ Public and admin pages check for content changes every 20 seconds and refresh au
 
 Import the SQL schema into the managed database before starting the app. If the cloud platform uses replaceable containers or a read-only application filesystem, attach persistent writable storage for `/var/www/html/uploads` so submitted photos and story images survive deployments. Serve the site over HTTPS and keep database credentials in the platform's secret/environment configuration.
 
-For the News feature, run [`upgrade-news.sql`](upgrade-news.sql) once against the database after importing the existing schema and before deploying the application files. News images are stored in `uploads/news`, so include that path in persistent upload storage.
+For the News feature, run [`upgrade-news.sql`](upgrade-news.sql) against the same database configured for the application after importing the existing schema and before deploying the application files. If the site reports that `news_articles` does not exist, select the configured database in your database administration tool and run this migration there; do not change the database credentials just to work around a missing table. The migration is safe to run again. News images are stored in `uploads/news`, so include that path in persistent upload storage.
+
+## Search engine setup
+
+The app provides a dynamic XML sitemap at `/sitemap.xml`, crawler instructions at `/robots.txt`, canonical URLs, page descriptions, and structured data for the archive, disaster stories, and news reports. Set `APP_URL` to the exact public HTTPS origin (for example, `https://archive.example.org`) before deployment so canonical links and the sitemap use your real domain. Apply the News database migration before requesting the sitemap, since it includes published news articles.
+
+After deploying the app and confirming that `https://your-domain.example/`, `/robots.txt`, and `/sitemap.xml` load publicly:
+
+1. Add and verify your domain in [Google Search Console](https://search.google.com/search-console/) using the DNS verification method recommended by Google.
+2. Open **Sitemaps**, submit `https://your-domain.example/sitemap.xml`, and check for fetch or indexing errors.
+3. Use **URL Inspection** for the homepage and representative `/story/<slug>` and `/news/<slug>` pages, then request indexing.
+4. Keep the site name consistent in the page title, visible branding, and structured data. Publish original, well-sourced story and news content with clear headings, useful summaries, descriptive image alt text, and links between related archive pages.
+
+Google decides when to index pages and how to display a site's name in results; submitting a sitemap helps discovery but does not guarantee rankings, indexing, or a particular search result.
 
 ## Installation with XAMPP
 

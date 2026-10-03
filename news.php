@@ -23,6 +23,7 @@ $articles = $statement->fetchAll();
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Latest news and updates related to accidents, disasters, and public safety in Nepal.">
     <title>Latest News — Nepal Disaster Archive</title>
+    <link rel="canonical" href="<?=e(absolute_url('/news'.($page > 1 ? '?page='.$page : '')))?>">
     <style>
         :root{--ink:#17202a;--paper:#f7f3ed;--red:#9e2b25;--green:#263d3a;--line:#d9d0c6}
         *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,serif}

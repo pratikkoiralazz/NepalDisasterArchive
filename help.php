@@ -7,6 +7,7 @@ require_once __DIR__.'/config/config.php';
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Help the Nepal Disaster Archive build a stable, independent home online.">
     <title>Help Us — Nepal Disaster Archive</title>
+    <link rel="canonical" href="<?=e(absolute_url('/help'))?>">
     <style>
         :root{--ink:#17202a;--paper:#f7f3ed;--red:#9e2b25;--green:#263d3a;--line:#d9d0c6}
         *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,serif}

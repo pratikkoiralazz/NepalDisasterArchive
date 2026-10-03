@@ -15,6 +15,7 @@ if (!$article) {
 }
 $canonicalUrl = absolute_url('/news/'.rawurlencode($article['slug']));
 $description = trim((string)($article['summary'] ?: mb_substr(strip_tags($article['content']),0,260)));
+$description = mb_substr($description, 0, 160);
 $imageUrl = $article['image_path']
     ? absolute_url('/'.ltrim((string)$article['image_path'],'/'))
     : null;
@@ -25,6 +26,21 @@ $sourceUrl = $sourceParts !== false
     ? (string)$article['source_url']
     : '';
 $paragraphs = preg_split("/\R{2,}/", trim((string)$article['content'])) ?: [];
+$structuredData = [
+    '@context'=>'https://schema.org',
+    '@type'=>'NewsArticle',
+    'headline'=>$article['title'],
+    'description'=>$description,
+    'mainEntityOfPage'=>$canonicalUrl,
+    'publisher'=>['@type'=>'Organization','name'=>'Nepal Disaster Archive'],
+    'inLanguage'=>'en',
+];
+if ($article['published_at']) {
+    $structuredData['datePublished'] = date(DATE_W3C, strtotime($article['published_at']));
+}
+if ($imageUrl) {
+    $structuredData['image'] = [$imageUrl];
+}
 ?><!doctype html>
 <html lang="en">
 <head>
@@ -39,6 +55,7 @@ $paragraphs = preg_split("/\R{2,}/", trim((string)$article['content'])) ?: [];
     <meta property="og:description" content="<?=e($description)?>">
     <meta property="og:url" content="<?=e($canonicalUrl)?>">
     <?php if ($imageUrl): ?><meta property="og:image" content="<?=e($imageUrl)?>"><?php endif; ?>
+    <script type="application/ld+json"><?=json_encode($structuredData,JSON_UNESCAPED_SLASHES|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_THROW_ON_ERROR)?></script>
     <style>
         *{box-sizing:border-box}body{margin:0;background:#f7f3ed;color:#17202a;font-family:Georgia,serif}
         .article{width:min(850px,90%);margin:58px auto 76px}.date{font:800 12px Arial,sans-serif;color:#9e2b25;text-transform:uppercase;letter-spacing:.8px}

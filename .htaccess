@@ -1,5 +1,8 @@
 RewriteEngine On
 
+RewriteRule ^sitemap\.xml$ sitemap.php [END]
+RewriteRule ^robots\.txt$ robots.php [END]
+
 RewriteCond %{THE_REQUEST} \s((?:/[^/\s?]+)*)/story\.php\?slug=([A-Za-z0-9_-]+)(?:&|\s) [NC]
 RewriteRule ^story\.php$ %1/story/%2? [R=301,L,NE]
 

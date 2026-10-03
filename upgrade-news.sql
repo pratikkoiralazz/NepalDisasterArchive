@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS news_articles (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    summary TEXT NULL,
+    content LONGTEXT NOT NULL,
+    source_name VARCHAR(255) NULL,
+    source_url TEXT NULL,
+    image_path VARCHAR(500) NULL,
+    status ENUM('DRAFT', 'PUBLISHED') NOT NULL DEFAULT 'DRAFT',
+    published_at DATETIME NULL,
+    created_by INT UNSIGNED NULL,
+    updated_by INT UNSIGNED NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_news_articles_slug (slug),
+    KEY idx_news_articles_status_published (status, published_at),
+    KEY idx_news_articles_updated (updated_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
