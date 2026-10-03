@@ -35,6 +35,7 @@ require_once __DIR__.'/config/config.php';
     <li style="margin-bottom: 20px; line-height: 1.8; font-size: 17px; color: #4f5757;"><strong style="color: #17202a;">Directly Applied:</strong> Any contributions go straight toward keeping the site online, secure, and running smoothly.</li>
     <li style="margin-bottom: 20px; line-height: 1.8; font-size: 17px; color: #4f5757;"><strong style="color: #17202a;">Security Notice:</strong> For your safety, never send payment details, card info, or passwords through email or social media direct messages.</li>
 </ul>
+
  
         <?php if (DONATION_URL !== ''): ?>
             <a class="support" href="<?=e(DONATION_URL)?>" target="_blank" rel="noopener noreferrer">Support us with Buy Me a MoMo</a>

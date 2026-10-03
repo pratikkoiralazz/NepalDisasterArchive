@@ -23,14 +23,16 @@ Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal'
 
 - XAMPP with Apache and MySQL
 - PHP 8.0 or later
-- PHP extensions: PDO MySQL and mbstring
+- PHP extensions: PDO MySQL, mbstring, and GD with FreeType support
 - A modern web browser
+
+In XAMPP, enable `extension=gd` in `php.ini` and restart Apache to generate story-sharing preview images.
 
 ## Cloud deployment
 
 The Docker image uses Apache's `/var/www/html` document root. Configure these environment variables in the cloud service instead of putting production database credentials in source:
 
-Public pages use clean URLs (for example, `/about` and `/preparedness`), and story pages use `/story/<slug>`. Existing `.php` page URLs redirect to their clean versions. The Docker image enables Apache `mod_rewrite` and permits the app's rewrite rules. Rebuild and redeploy the image after changing these Apache settings.
+Public pages use clean URLs (for example, `/about` and `/preparedness`), and story pages use `/story/<slug>`. Existing `.php` page URLs redirect to their clean versions. The Docker image enables Apache `mod_rewrite`, permits the app's rewrite rules, and installs GD/FreeType for 1200×630 Facebook story preview images. Rebuild and redeploy the image after changing these Apache settings.
 
 Public and admin pages check for content changes every 20 seconds and refresh automatically when no form has unsaved changes. If a form has been edited, the page shows a refresh prompt instead of discarding the work.
 
