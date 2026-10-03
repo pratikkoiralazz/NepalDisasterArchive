@@ -1,0 +1,15 @@
+<?php
+$currentPage=basename($_SERVER['SCRIPT_NAME']??'index.php');
+$navItems=[
+ ['label'=>'Home','href'=>BASE_URL.'/#home','pages'=>['index.php'],'section'=>'home'],
+ ['label'=>'Stories','href'=>BASE_URL.'/#stories','pages'=>['story.php'],'section'=>'stories'],
+ ['label'=>'Categories','href'=>BASE_URL.'/#hazards','pages'=>[],'section'=>'hazards'],
+ ['label'=>'Explore','href'=>BASE_URL.'/#explore','pages'=>[],'section'=>'explore'],
+ ['label'=>'Emergency Help','href'=>BASE_URL.'/resources.php','pages'=>['resources.php']],
+ ['label'=>'Guides','href'=>BASE_URL.'/preparedness.php','pages'=>['preparedness.php']],
+ ['label'=>'Human Stories','href'=>BASE_URL.'/human-stories.php','pages'=>['human-stories.php']],
+ ['label'=>'Documentaries','href'=>BASE_URL.'/documentaries.php','pages'=>['documentaries.php']],
+ ['label'=>'Volunteer Network','href'=>BASE_URL.'/volunteer.php','pages'=>['volunteer.php']],
+ ['label'=>'About Us','href'=>BASE_URL.'/about.php','pages'=>['about.php']]
+];
+?><style>.public-nav{position:sticky;top:0;z-index:20;background:#111820;color:#fff;padding:12px 4%;display:flex;align-items:center;gap:22px;font:13px Arial,sans-serif}.public-nav-brand{flex:0 0 auto;color:#fff;text-decoration:none;font-weight:900;letter-spacing:1px;white-space:nowrap}.public-nav-links{margin-left:auto;display:flex;align-items:center;gap:4px;max-width:100%;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#59636a #111820}.public-nav-links a{flex:0 0 auto;color:#e1e5e8;text-decoration:none;padding:10px 11px;border-radius:5px;white-space:nowrap}.public-nav-links a:hover{background:#26333e;color:#fff}.public-nav-links a[aria-current="page"]{background:#9e2b25;color:#fff;font-weight:700}.public-nav a:focus-visible{outline:2px solid #f0c2b8;outline-offset:2px}@media(max-width:900px){.public-nav{align-items:flex-start;flex-direction:column;gap:8px;padding:12px 5%}.public-nav-links{margin:0;width:100%;max-width:none}.public-nav-links a{padding:9px 10px}}@media(max-width:480px){.public-nav-brand{font-size:12px}.public-nav-links{gap:2px}.public-nav-links a{font-size:12px;padding:9px 8px}}</style><nav class="public-nav" aria-label="Main navigation"><a class="public-nav-brand" href="<?=BASE_URL?>/#home">NEPAL DISASTER ARCHIVE</a><div class="public-nav-links"><?php foreach($navItems as $item):$active=in_array($currentPage,$item['pages'],true);?><a href="<?=e($item['href'])?>" data-section="<?=e($item['section']??'')?>" <?=$active?'aria-current="page"':''?>><?=e($item['label'])?></a><?php endforeach;?></div></nav><script>(function(){var links=document.querySelectorAll('.public-nav-links a[data-section]');if(!links.length)return;function activate(section){links.forEach(function(link){if(link.dataset.section===section)link.setAttribute('aria-current','page');else if(['index.php','story.php'].includes(<?=json_encode($currentPage)?>))link.removeAttribute('aria-current')})}if(location.hash){activate(location.hash.slice(1))}links.forEach(function(link){link.addEventListener('click',function(){if(link.dataset.section)activate(link.dataset.section)})})})();</script>

@@ -11,22 +11,7 @@ $locationData=nepal_locations();$provinces=array_keys($locationData);$districts=
 <style>:root{--ink:#17202a;--paper:#f7f3ed;--red:#9e2b25;--muted:#6c706f;--line:#d9d0c6}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,serif}.nav{position:sticky;top:0;background:#111820;color:#fff;z-index:10;padding:15px 5%;display:flex;align-items:center;gap:25px;font-family:Arial}.logo{font-weight:900;letter-spacing:2px}.navlinks{margin-left:auto;display:flex;gap:18px}.nav a{color:#fff;text-decoration:none;font-size:13px}.hero{padding:100px 7% 70px;background:#18212a;color:white}.hero h1{font-size:clamp(44px,7vw,90px);line-height:.95;margin:0 0 25px;max-width:1000px}.hero p{font-size:21px;max-width:800px;color:#d5d8da;line-height:1.6}.stats{display:flex;gap:35px;flex-wrap:wrap;margin-top:40px;font-family:Arial}.stat strong{display:block;font-size:30px}.wrap{width:min(1200px,90%);margin:auto}.section{padding:70px 0}.section h2{font-size:42px;margin:0 0 15px}.intro{font-size:19px;line-height:1.8;color:#444;max-width:850px}.filters{display:flex;gap:10px;flex-wrap:wrap;margin:30px 0}.filters input,.filters select{padding:13px;border:1px solid var(--line);background:white;border-radius:7px;font:16px Arial}.filters button{padding:13px 20px;background:var(--red);color:white;border:0;border-radius:7px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.card{background:white;border:1px solid var(--line);padding:25px;border-radius:10px}.card h3{font-size:25px;margin:10px 0}.meta{font:12px Arial;color:var(--red);font-weight:800;text-transform:uppercase;letter-spacing:1px}.card p{line-height:1.6;color:#555}.read{color:var(--red);font-family:Arial;font-weight:700;text-decoration:none}.category{font-family:Arial;font-size:12px;color:#555}.why{background:#ece5dc}.columns{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}.columns div{border-top:3px solid var(--red);padding-top:15px}.columns h3{font-size:25px}.columns p{line-height:1.7;color:#555}.disclaimer{font:13px Arial;color:#555;border-left:3px solid var(--red);padding:15px 20px;background:#eee9e2}.footer{background:#111820;color:#d8dde0;padding:45px 7%;font-family:Arial}@media(max-width:850px){.navlinks{display:none}.cards,.columns{grid-template-columns:1fr}.hero{padding:70px 5%}.section{padding:45px 0}}</style></head><body>
 
 
-<style>.footer:not(.clean-footer){display:none}.timeline-toggle{display:none!important}</style><script>document.addEventListener('DOMContentLoaded',function(){var items=document.querySelectorAll('.timeline article');if(items.length>3){items.forEach(function(item,index){if(index>=3)item.hidden=true});var link=document.createElement('a');link.className='timeline-toggle';link.href='#explore';link.textContent='View more';items[items.length-1].parentNode.after(link);link.addEventListener('click',function(event){event.preventDefault();var expanded=link.dataset.expanded==='true';items.forEach(function(item,index){item.hidden=expanded&&index>=3});link.dataset.expanded=expanded?'false':'true';link.textContent=expanded?'View more':'View less'})}});</script><nav class="nav">
-    <a class="logo" href="#home">NEPAL DISASTER ARCHIVE</a>
-    <div class="navlinks">
-        <a href="#home">Home</a>
-        <a href="#stories">Stories</a>
-        <a href="#hazards">Categories</a>
-        <a href="#explore">Explore</a>
-        <a href="<?=BASE_URL?>/resources.php">Emergency Help</a>
-        <a href="<?=BASE_URL?>/preparedness.php">Guides</a>
-        <a href="<?=BASE_URL?>/human-stories.php">Human Stories</a>
-        <a href="<?=BASE_URL?>/volunteer.php">Volunteer Network</a>
-        <a href="<?=BASE_URL?>/about.php">About Us</a>
-        
-        <a href="<?=BASE_URL?>/admin/login.php">Editor Login</a>
-    </div>
-</nav>
+<style>.footer:not(.clean-footer){display:none}.timeline-toggle{display:none!important}</style><script>document.addEventListener('DOMContentLoaded',function(){var items=document.querySelectorAll('.timeline article');if(items.length>3){items.forEach(function(item,index){if(index>=3)item.hidden=true});var link=document.createElement('a');link.className='timeline-toggle';link.href='#explore';link.textContent='View more';items[items.length-1].parentNode.after(link);link.addEventListener('click',function(event){event.preventDefault();var expanded=link.dataset.expanded==='true';items.forEach(function(item,index){item.hidden=expanded&&index>=3});link.dataset.expanded=expanded?'false':'true';link.textContent=expanded?'View more':'View less'})}});</script><?php require_once __DIR__ . '/includes/public-nav.php'; ?>
 
 <header class="hero" id="home">
     <div class="wrap">
