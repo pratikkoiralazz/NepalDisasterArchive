@@ -133,6 +133,8 @@ The seed file is safe to run more than once because each story has a unique slug
 
 Use **News** in the admin sidebar to draft or publish news reports. Add a clear summary, identify the reporting source, and include its original URL when available. Published reports appear on `/news` and have their own shareable detail page.
 
+Use **Human Submissions** to review community stories. View or edit each submission, approve it for editorial review, then publish it when ready; rejected submissions remain separate from the public archive.
+
 Historical dates, casualty figures, and magnitudes may vary between sources. Add source notes and clearly communicate uncertainty where appropriate.
 
 ## Project structure
