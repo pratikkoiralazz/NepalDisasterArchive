@@ -1,12 +1,33 @@
 <?php
 require_once __DIR__.'/../config/auth.php'; require_login();
 $me=user(); $flash=get_flash();
+$notification_sources = [
+    'stories' => ['table' => 'story_submissions', 'status' => 'SUBMITTED', 'page' => 'human-submissions.php'],
+    'corrections' => ['table' => 'correction_reports', 'status' => 'OPEN', 'page' => 'corrections.php'],
+    'volunteers' => ['table' => 'volunteers', 'status' => 'PENDING', 'page' => 'volunteers.php'],
+];
 if ($me['role'] === 'ADMIN') {
-    $admin_notifications = [
-        'stories' => (int)db()->query("SELECT COUNT(*) FROM story_submissions WHERE status='SUBMITTED'")->fetchColumn(),
-        'corrections' => (int)db()->query("SELECT COUNT(*) FROM correction_reports WHERE status='OPEN'")->fetchColumn(),
-        'volunteers' => (int)db()->query("SELECT COUNT(*) FROM volunteers WHERE status='PENDING'")->fetchColumn(),
-    ];
+    $notification_read_key = 'admin_notification_read_' . (int)$me['id'];
+    if (!isset($_SESSION[$notification_read_key]) || !is_array($_SESSION[$notification_read_key])) {
+        $_SESSION[$notification_read_key] = [];
+    }
+    $current_admin_page = basename($_SERVER['SCRIPT_NAME'] ?? '');
+    $admin_notifications = [];
+    foreach ($notification_sources as $key => $source) {
+        if ($current_admin_page === $source['page']) {
+            $latestId = (int)db()->query('SELECT COALESCE(MAX(id),0) FROM '.$source['table'])->fetchColumn();
+            $_SESSION[$notification_read_key][$key] = max(
+                (int)($_SESSION[$notification_read_key][$key] ?? 0),
+                $latestId
+            );
+        }
+        $count = db()->prepare('SELECT COUNT(*) FROM '.$source['table'].' WHERE status=? AND id>?');
+        $count->execute([
+            $source['status'],
+            (int)($_SESSION[$notification_read_key][$key] ?? 0),
+        ]);
+        $admin_notifications[$key] = (int)$count->fetchColumn();
+    }
 } else {
     $admin_notifications = ['stories' => 0, 'corrections' => 0, 'volunteers' => 0];
 }
