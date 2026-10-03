@@ -1,0 +1,4 @@
+Options -MultiViews
+RewriteEngine On
+
+RewriteRule ^story/([^/]+)/?$ story.php?slug=$1 [B,L,QSA]

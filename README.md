@@ -30,6 +30,8 @@ Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal'
 
 The Docker image uses Apache's `/var/www/html` document root. Configure these environment variables in the cloud service instead of putting production database credentials in source:
 
+Story pages use clean `/story/<slug>` URLs. Apache must allow the included `.htaccess` rewrite rules; the provided PHP Apache image supports these rules.
+
 - `DB_HOST`: managed MySQL hostname
 - `DB_NAME`: application database name
 - `DB_USER`: database username
@@ -91,7 +93,7 @@ The seed file is safe to run more than once because each story has a unique slug
 ## URLs
 
 - Public archive: `http://localhost/nepal-disaster-archive/`
-- Story page: `http://localhost/nepal-disaster-archive/story.php?slug=story-slug`
+- Story page: `http://localhost/nepal-disaster-archive/story/story-slug`
 - Staff login: `http://localhost/nepal-disaster-archive/admin/login.php`
 - Admin dashboard: `http://localhost/nepal-disaster-archive/admin/`
 
