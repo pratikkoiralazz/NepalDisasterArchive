@@ -25,7 +25,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['correction_message'])){v
 <?php if($story['sources']):?><div class="sources"><strong>Sources / references</strong><br><br><?=e($story['sources'])?></div><?php endif;?>
 <?php if(!empty($story['image_path'])):?><img class="story-cover" src="<?=BASE_URL?>/<?=e($story['image_path'])?>" alt="<?=e($story['title'])?>"><?php endif;?></article>
    
-    <footer class="footer clean-footer"><div><strong>NEPAL DISASTER ARCHIVE</strong><p>Disaster history · Human stories · Preparedness</p><p>Documenting Disasters. Building Resilience - An AcademiX Digital Initiative</p></div><a class="footer-about" href="<?=BASE_URL?>/about.php">About Us</a>
+    <footer class="footer clean-footer"><div><strong>NEPAL DISASTER ARCHIVE</strong><p>Disaster history · Human stories · Preparedness</p><p>Documenting Disasters. Building Resilience - An AcademiX Digital Initiative</p></div><a class="footer-about" href="<?=BASE_URL?>/about">About Us</a>
     <div class="social-links" aria-label="Social media links"><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.3 0-5 1.8-5 5v3H6v4h3v8h4v-8h3.2l.8-4H13V9c0-.7.3-1 1-1z"/></svg></a><a href="https://www.instagram.com/academix_digital/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="icon-fill"/></svg></a></div></footer>
         
         

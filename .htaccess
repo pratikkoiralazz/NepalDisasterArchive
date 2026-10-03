@@ -1,3 +1,23 @@
 RewriteEngine On
 
-RewriteRule ^story/([^/]+)/?$ story.php?slug=$1 [B,L,QSA]
+RewriteCond %{THE_REQUEST} \s((?:/[^/\s?]+)*)/story\.php\?slug=([A-Za-z0-9_-]+)(?:&|\s) [NC]
+RewriteRule ^story\.php$ %1/story/%2? [R=301,L,NE]
+
+RewriteCond %{THE_REQUEST} \s((?:/[^/\s?]+)*)/index\.php[?\s] [NC]
+RewriteRule ^(.*/)?index\.php$ %1/ [R=301,L]
+
+RewriteCond %{THE_REQUEST} !\s/+[^\s?]*/story\.php\?slug=[A-Za-z0-9_-]+(?:&|\s) [NC]
+RewriteCond %{THE_REQUEST} \s(/[^?\s]+)\.php[?\s] [NC]
+RewriteRule ^(.+)\.php$ %1 [R=301,L,NE]
+
+RewriteRule ^story/([A-Za-z0-9_-]+)/?$ story.php?slug=$1 [B,L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^admin/([A-Za-z0-9_-]+)/?$ admin/$1.php [END]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([A-Za-z0-9_-]+)/?$ $1.php [END]

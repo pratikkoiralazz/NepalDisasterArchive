@@ -125,7 +125,7 @@ $rows = db()->query('SELECT id,name,email,role,created_at FROM admins ORDER BY c
             </div>
         </div>
         <br><button type="submit"><?= $editUser ? 'Save changes' : 'Create user' ?></button>
-        <?php if ($editUser): ?> <a class="btn secondary" href="<?= BASE_URL ?>/admin/users.php">Cancel</a><?php endif; ?>
+        <?php if ($editUser): ?> <a class="btn secondary" href="<?= BASE_URL ?>/admin/users">Cancel</a><?php endif; ?>
     </form>
     <div class="tablewrap" style="margin-top:20px">
         <table>
@@ -138,7 +138,7 @@ $rows = db()->query('SELECT id,name,email,role,created_at FROM admins ORDER BY c
                         <td><?= e($row['role']) ?></td>
                         <td><?= e($row['created_at']) ?></td>
                         <td>
-                            <a class="btn secondary" href="<?= BASE_URL ?>/admin/users.php?edit=<?= (int)$row['id'] ?>">Edit</a>
+                            <a class="btn secondary" href="<?= BASE_URL ?>/admin/users?edit=<?= (int)$row['id'] ?>">Edit</a>
                             <form method="post" style="display:inline" onsubmit="return confirm('Delete this user? This cannot be undone.')">
                                 <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
                                 <input type="hidden" name="action" value="delete">

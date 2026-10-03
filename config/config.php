@@ -79,6 +79,7 @@ function redirect(string $path): never {
         throw new InvalidArgumentException('Redirect path must be a safe local path.');
     }
 
+    $path = preg_replace('/\.php(?=([?#]|$))/i', '', $path) ?? $path;
     $location = rtrim(BASE_URL, '/') . '/' . ltrim($path, '/');
     if (!headers_sent()) {
         while (ob_get_level() > 0) {
@@ -112,6 +113,37 @@ function slugify(string $text): string {
     $text = trim(mb_strtolower($text));
     $text = preg_replace('/[^\pL\pN]+/u','-',$text);
     return trim($text,'-') ?: 'story-'.time();
+}
+
+function live_data_version(): string {
+    static $tables = [
+        'admins' => ['id', 'name', 'email', 'role'],
+        'categories' => ['id', 'name', 'slug', 'description'],
+        'stories' => ['id', 'status', 'story_type', 'updated_at'],
+        'documentaries' => ['id', 'status', 'updated_at'],
+        'emergency_contacts' => ['id', 'active', 'updated_at'],
+        'correction_reports' => ['id', 'status', 'created_at'],
+        'story_submissions' => ['id', 'status', 'reviewed_at', 'created_at'],
+        'volunteers' => ['id', 'status', 'updated_at'],
+        'story_images' => ['id', 'story_id', 'caption', 'credit', 'sort_order', 'created_at'],
+        'story_sources' => ['id', 'story_id', 'title', 'publisher', 'url', 'published_on', 'verified'],
+        'story_revisions' => ['id', 'story_id', 'title', 'created_at'],
+    ];
+    $hash = hash_init('sha256');
+
+    foreach ($tables as $table => $columns) {
+        $quotedColumns = implode(',', array_map(
+            static fn(string $column): string => '`'.$column.'`',
+            $columns
+        ));
+        $rows = db()->query('SELECT '.$quotedColumns.' FROM `'.$table.'` ORDER BY `id`');
+        hash_update($hash, $table."\0");
+        while ($row = $rows->fetch(PDO::FETCH_NUM)) {
+            hash_update($hash, json_encode($row, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)."\0");
+        }
+    }
+
+    return hash_final($hash);
 }
 
 function nepal_locations(): array {

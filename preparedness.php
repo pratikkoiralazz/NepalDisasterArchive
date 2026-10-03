@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/config/config.php';
 $lang='en';
-echo '<style>.links span,.links a[href*="about.php"]{display:none}</style>';
+echo '<style>.links span,.links a[href*="/about"]{display:none}</style>';
 $text=$lang==='ne'?['title'=>'आपतकालीन तयारी निर्देशिका','eyebrow'=>'तयार रहनुहोस्','lead'=>'प्रकोपअघि, प्रकोपको समयमा र त्यसपछि परिवार तथा समुदायलाई सुरक्षित राख्न आधारभूत कदमहरू।','home'=>'होम','resources'=>'आपतकालीन स्रोतहरू','archive'=>'अभिलेख','language'=>'भाषा']:['title'=>'Preparedness Guides','eyebrow'=>'Be prepared','lead'=>'Practical steps to help families and communities stay safer before, during, and after a disaster.','home'=>'Home','resources'=>'Emergency resources','archive'=>'Archive','language'=>'Language'];
 $guides=$lang==='ne' ? [
  ['title'=>'भूकम्प','before'=>'भारी सामान तल राख्नुहोस्, आपतकालीन झोला तयार राख्नुहोस् र परिवार भेट्ने स्थान तय गर्नुहोस्।','during'=>'झुक्नुहोस्, छोपिनुहोस् र समातिरहनुहोस्। झ्याल, लिफ्ट र क्षतिग्रस्त भवनबाट टाढा रहनुहोस्।','after'=>'ग्यास तथा बिजुलीको जोखिम जाँच्नुहोस्, अफवाह नफैलाउनुहोस् र आधिकारिक सूचनाको पालना गर्नुहोस्।'],

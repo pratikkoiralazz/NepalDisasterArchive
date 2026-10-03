@@ -5,12 +5,12 @@ $navItems = [
     ['label' => 'Stories', 'href' => BASE_URL . '/#stories', 'pages' => ['story.php'], 'section' => 'stories'],
     ['label' => 'Categories', 'href' => BASE_URL . '/#hazards', 'pages' => [], 'section' => 'hazards'],
     ['label' => 'Explore', 'href' => BASE_URL . '/#explore', 'pages' => [], 'section' => 'explore'],
-    ['label' => 'Emergency Help', 'href' => BASE_URL . '/resources.php', 'pages' => ['resources.php']],
-    ['label' => 'Guides', 'href' => BASE_URL . '/preparedness.php', 'pages' => ['preparedness.php']],
-    ['label' => 'Human Stories', 'href' => BASE_URL . '/human-stories.php', 'pages' => ['human-stories.php']],
-    ['label' => 'Documentaries', 'href' => BASE_URL . '/documentaries.php', 'pages' => ['documentaries.php']],
-    ['label' => 'Volunteer Network', 'href' => BASE_URL . '/volunteer.php', 'pages' => ['volunteer.php']],
-    ['label' => 'About Us', 'href' => BASE_URL . '/about.php', 'pages' => ['about.php']],
+    ['label' => 'Emergency Help', 'href' => BASE_URL . '/resources', 'pages' => ['resources.php']],
+    ['label' => 'Guides', 'href' => BASE_URL . '/preparedness', 'pages' => ['preparedness.php']],
+    ['label' => 'Human Stories', 'href' => BASE_URL . '/human-stories', 'pages' => ['human-stories.php']],
+    ['label' => 'Documentaries', 'href' => BASE_URL . '/documentaries', 'pages' => ['documentaries.php']],
+    ['label' => 'Volunteer Network', 'href' => BASE_URL . '/volunteer', 'pages' => ['volunteer.php']],
+    ['label' => 'About Us', 'href' => BASE_URL . '/about', 'pages' => ['about.php']],
 ];
 ?>
 <style>
@@ -39,3 +39,4 @@ $navItems = [
 <script>
 (function(){var icon=document.createElement('link');icon.rel='icon';icon.type='image/svg+xml';icon.href=<?= json_encode(BASE_URL . '/favicon.svg') ?>;document.head.appendChild(icon);var links=document.querySelectorAll('.public-nav-links a[data-section]');if(!links.length)return;function activate(section){links.forEach(function(link){if(link.dataset.section===section)link.setAttribute('aria-current','page');else if(['index.php','story.php'].includes(<?= json_encode($currentPage) ?>))link.removeAttribute('aria-current')})}if(location.hash){activate(location.hash.slice(1))}links.forEach(function(link){link.addEventListener('click',function(){if(link.dataset.section)activate(link.dataset.section)})})})();
 </script>
+<?php require __DIR__.'/live-updates.php'; ?>
