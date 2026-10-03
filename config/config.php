@@ -2,12 +2,13 @@
 declare(strict_types=1);
 session_start();
 
-const DB_HOST = '127.0.0.1';
-const DB_NAME = 'nepal_disaster_archive';
-const DB_USER = 'root';
-const DB_PASS = '';
-const BASE_URL = '/nepal-disaster-archive';
-const SITE_NAME = 'Nepal Disaster Archive';
+// Use environment variables provided by cloud hosting or fallback to defaults
+define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
+define('DB_NAME', getenv('DB_NAME') ?: 'nepal_disaster_archive');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
+define('BASE_URL', getenv('BASE_URL') ?: '/nepal-disaster-archive');
+define('SITE_NAME', 'Nepal Disaster Archive');
 
 function db(): PDO {
     static $pdo = null;
@@ -62,5 +63,3 @@ function log_admin_activity(string $action, string $details = ''): void {
 function track_event(string $eventType, ?int $storyId = null, string $searchTerm = ''): void {
     try { db()->prepare('INSERT INTO analytics_events(story_id,event_type,search_term) VALUES(?,?,?)')->execute([$storyId,$eventType,$searchTerm?:null]); } catch (Throwable $e) { }
 }
-
-

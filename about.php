@@ -13,6 +13,6 @@ $categories=db()->query('SELECT name FROM categories ORDER BY name')->fetchAll(P
     
     
     <section class="block"><h2>Last Updated</h2><p><?=e($lastUpdated ? date('F j, Y',strtotime($lastUpdated)) : 'Not yet available')?></p><p></p></section></div><a class="back" href="<?=BASE_URL?>/">← Back to archive</a></main>
-<footer class="footer"><strong>NEPAL DISASTER ARCHIVE</strong><p>Documenting Disasters. Building Resilience - An AcademiX Digital Initiative</p>
+<footer class="footer"><strong>NEPAL DISASTER ARCHIVE</strong><p>Disaster history · Human stories · Preparedness</p><p>Documenting Disasters. Building Resilience - An AcademiX Digital Initiative</p>
 <p> Content is provided for research and educational use with attribution.</p>
 <div class="social-links"><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8h3V4h-3c-3.3 0-5 1.8-5 5v3H6v4h3v8h4v-8h3.2l.8-4H13V9c0-.7.3-1 1-1z"/></svg></a><a href="https://www.instagram.com/academix_digital/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></a></div></footer></body></html>

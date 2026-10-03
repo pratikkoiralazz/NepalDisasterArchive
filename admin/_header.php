@@ -37,6 +37,12 @@ function admin_notification_badge(int $count): string {
 }
 ?><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?=e($page_title??'Admin')?> — <?=SITE_NAME?></title><link rel="stylesheet" href="<?=BASE_URL?>/admin/admin.css"><style>
+.sidebar .brand{display:flex;align-items:center;gap:10px;padding:8px 12px 30px;font-size:unset;letter-spacing:0}
+.sidebar .brand .archive-mark{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;background:#9e2b25;border-radius:8px}
+.sidebar .brand .archive-mark svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sidebar .brand .archive-wordmark{display:grid;gap:4px}
+.sidebar .brand .archive-wordmark strong{font-size:13px;letter-spacing:.6px;line-height:1.1}
+.sidebar .brand .archive-wordmark small{font-size:8px;font-weight:700;letter-spacing:.5px;line-height:1.35;color:#d2ad93}
 .sidebar nav a{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .notification-badge,.notification-count{display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:#c0392b;color:#fff;font:700 11px Arial,sans-serif}
 .top .notifications{position:relative;margin-left:auto}
@@ -52,7 +58,7 @@ function admin_notification_badge(int $count): string {
 .notification-menu p{margin:8px 4px;color:#667;font-size:14px}
 .top .site-link{margin-left:0}
 </style></head><body>
-<aside class="sidebar"><div class="brand">NEPAL<br><span>DISASTER ARCHIVE</span></div><nav>
+<aside class="sidebar"><div class="brand"><span class="archive-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 22 12 10l5 7 4-5 7 10"/><path d="M5 25h22M8 28h16"/></svg></span><span class="archive-wordmark"><strong>Nepal Disaster Archive</strong><small>DISASTER HISTORY · HUMAN STORIES · PREPAREDNESS</small></span></div><nav>
 <a href="<?=BASE_URL?>/admin/index.php">Dashboard</a><?php if($me['role']==='ADMIN'):?><a href="<?=BASE_URL?>/admin/analytics.php">Analytics</a><?php endif;?><a href="<?=BASE_URL?>/admin/stories.php">Stories</a><a href="<?=BASE_URL?>/admin/bulk-locations.php">Bulk Locations</a><?php if($me['role']==='ADMIN'):?><a href="<?=BASE_URL?>/admin/corrections.php">Corrections<?=admin_notification_badge($admin_notifications['corrections'])?></a><a href="<?=BASE_URL?>/admin/human-submissions.php">Human Submissions<?=admin_notification_badge($admin_notifications['stories'])?></a><a href="<?=BASE_URL?>/admin/volunteers.php">Volunteer Network<?=admin_notification_badge($admin_notifications['volunteers'])?></a><a href="<?=BASE_URL?>/admin/documentaries.php">Documentary Archive</a><?php endif;?><a href="<?=BASE_URL?>/admin/story-edit.php">New Story</a><a href="<?=BASE_URL?>/admin/categories.php">Categories</a><a href="<?=BASE_URL?>/admin/users.php">Users</a>
 </nav><div class="sidebottom"><small><?=e($me['name'])?> · <?=e($me['role'])?></small><a href="<?=BASE_URL?>/admin/logout.php">Logout</a></div></aside>
 <main class="main"><header class="top"><button class="menu" onclick="document.body.classList.toggle('navopen')">☰</button><strong><?=e($page_title??'Admin')?></strong>
