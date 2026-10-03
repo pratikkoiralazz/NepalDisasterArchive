@@ -7,7 +7,7 @@ define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
 define('DB_NAME', getenv('DB_NAME') ?: 'nepal_disaster_archive');
 define('DB_USER', getenv('DB_USER') ?: 'root');
 define('DB_PASS', getenv('DB_PASS') ?: '');
-define('BASE_URL', getenv('BASE_URL') ?: '/nepal-disaster-archive');
+define('BASE_URL', getenv('BASE_URL') !== false ? getenv('BASE_URL') : '');
 define('SITE_NAME', 'Nepal Disaster Archive');
 
 function db(): PDO {
