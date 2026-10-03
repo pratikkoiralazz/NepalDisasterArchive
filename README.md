@@ -30,7 +30,7 @@ Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal'
 
 The Docker image uses Apache's `/var/www/html` document root. Configure these environment variables in the cloud service instead of putting production database credentials in source:
 
-Story pages use clean `/story/<slug>` URLs. Apache must allow the included `.htaccess` rewrite rules; the provided PHP Apache image supports these rules.
+Story pages use clean `/story/<slug>` URLs. The Docker image enables Apache `mod_rewrite` and permits the app's rewrite rules. Rebuild and redeploy the image after changing these Apache settings.
 
 - `DB_HOST`: managed MySQL hostname
 - `DB_NAME`: application database name
