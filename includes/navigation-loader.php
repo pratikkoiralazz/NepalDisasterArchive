@@ -5,9 +5,9 @@
     </div>
 </div>
 <style>
-.page-navigation-loader{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:24px;background:rgba(0,0,0,.94);color:#b8b8b8;font:16px Arial,sans-serif}
+.page-navigation-loader{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:24px;background:transparent;color:#b8b8b8;font:16px Arial,sans-serif;pointer-events:none}
 .page-navigation-loader[hidden]{display:none}
-.page-navigation-loader-panel{display:grid;justify-items:center;gap:14px;width:min(1056px,100%);min-height:84px;align-content:center;border:1px solid #242424;border-radius:14px;background:#050505}
+.page-navigation-loader-panel{display:grid;justify-items:center;gap:14px}
 .page-navigation-loader-dots{display:flex;gap:10px}
 .page-navigation-loader-dots span{width:18px;height:18px;border-radius:50%;background:#3b82f6;animation:page-navigation-loader-pulse .8s ease-in-out infinite alternate}
 .page-navigation-loader-dots span:nth-child(2){animation-delay:.15s}
