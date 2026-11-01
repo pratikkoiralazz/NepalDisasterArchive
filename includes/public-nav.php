@@ -37,6 +37,7 @@ $navItems = [
     </a>
     <div class="public-nav-links"><?php foreach ($navItems as $item): $active = in_array($currentPage, $item['pages'], true); ?><a href="<?= e($item['href']) ?>" data-section="<?= e($item['section'] ?? '') ?>" <?= $active ? 'aria-current="page"' : '' ?>><?= e($item['label']) ?></a><?php endforeach; ?></div>
 </nav>
+<?php require_once __DIR__.'/navigation-loader.php'; ?>
 <script>
 (function(){var icon=document.createElement('link');icon.rel='icon';icon.type='image/svg+xml';icon.href=<?= json_encode(BASE_URL . '/favicon.svg') ?>;document.head.appendChild(icon);var links=document.querySelectorAll('.public-nav-links a[data-section]');if(!links.length)return;function activate(section){links.forEach(function(link){if(link.dataset.section===section)link.setAttribute('aria-current','page');else if(['index.php','story.php'].includes(<?= json_encode($currentPage) ?>))link.removeAttribute('aria-current')})}if(location.hash){activate(location.hash.slice(1))}links.forEach(function(link){link.addEventListener('click',function(){if(link.dataset.section)activate(link.dataset.section)})})})();
 </script>

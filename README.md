@@ -19,6 +19,7 @@ Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal'
 - Cover images, map coordinates, district/province browsing, and an interactive timeline
 - Advanced filtering by category, location, date range, and sort order
 - Draft, needs-review, and published editorial workflow with revision history
+- A three-dot loading indicator for in-site page navigation, shown for up to one second
 
 ## Requirements
 
