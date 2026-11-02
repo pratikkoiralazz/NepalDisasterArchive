@@ -75,7 +75,7 @@ if ($imageUrl) {
     <?php if ($imageUrl): ?><img class="cover" src="<?=e(BASE_URL.'/'.ltrim((string)$article['image_path'],'/'))?>" alt="<?=e($article['title'])?>"><?php endif; ?>
     <?php if ($article['source_name']): ?><div class="source"><strong>Source:</strong> <?=e($article['source_name'])?><?php if ($sourceUrl): ?> · <a href="<?=e($sourceUrl)?>" target="_blank" rel="noopener noreferrer">View original report ↗</a><?php endif; ?></div><?php endif; ?>
     <div class="story-content"><?php foreach ($paragraphs as $paragraph): ?><p><?=nl2br(e($paragraph))?></p><?php endforeach; ?></div>
-    <a class="back" href="<?=e(BASE_URL)?>/news">← Backk to news</a>
+    <a class="back" href="<?=e(BASE_URL)?>/news">← Back to news</a>
 </main>
 <?php require __DIR__.'/includes/public-footer.php'; ?>
 </body>
