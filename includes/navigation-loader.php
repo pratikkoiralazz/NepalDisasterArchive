@@ -19,9 +19,7 @@
 (function(){
     var loader=document.getElementById('page-navigation-loader');
     if(!loader)return;
-    var hideTimer;
     function hide(){
-        window.clearTimeout(hideTimer);
         loader.hidden=true;
         document.documentElement.removeAttribute('aria-busy');
     }
@@ -29,7 +27,6 @@
         if(!loader.hidden)return;
         loader.hidden=false;
         document.documentElement.setAttribute('aria-busy','true');
-        hideTimer=window.setTimeout(hide,1000);
     }
     document.addEventListener('click',function(event){
         if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
